@@ -44,7 +44,7 @@ button{width:100%;margin-top:20px;padding:15px;border:0;border-radius:14px;backg
 <script>
 (function(){
   /* ===== GANTI kode di bawah dengan kode deployment Apps Script (bagian di antara /s/ dan /exec) ===== */
-  var KODE_DEPLOYMENT="ISI_KODE_DEPLOYMENT";
+  var KODE_DEPLOYMENT="https://script.google.com/macros/s/AKfycbwfbfyMvDroaUvOKPiJYqsPiZPJZiQfM6Glkmn7L0SD7XJ1kRHI1EUZzYipc6T2jnj6/exec";
   var q=new URLSearchParams(location.search),s=(q.get("s")||(KODE_DEPLOYMENT.indexOf("ISI_")===0?"":KODE_DEPLOYMENT)).trim();
   var API=/^https:\/\//.test(s)?s.split("?")[0]:"https://script.google.com/macros/s/"+s+"/exec";
   var cd=document.getElementById("cd");
