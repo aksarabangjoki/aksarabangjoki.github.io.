@@ -35,8 +35,8 @@ body{background:#F1EFFA;color:#16122E;min-height:100vh;padding:20px 14px 30px}
 .btn{display:block;width:100%;padding:15px;border:0;border-radius:15px;background:#5B3CC4;color:#fff;font-size:15.5px;font-weight:800;cursor:pointer;text-align:center;text-decoration:none}
 .btn:disabled{opacity:.55;cursor:not-allowed}.btn.wa{background:#1FAF54;margin-top:10px}.btn.gh{background:#F1EFFA;color:#3A2A85}
 label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
-textarea,input{width:100%;padding:13px 14px;border:1.5px solid #DCD5F2;border-radius:13px;font-size:15px;outline:none;color:#16122E;background:#fff}
-textarea{min-height:120px;resize:vertical}textarea:focus,input:focus{border-color:#5B3CC4;box-shadow:0 0 0 3px rgba(91,60,196,.15)}
+textarea,input,select{width:100%;padding:13px 14px;border:1.5px solid #DCD5F2;border-radius:13px;font-size:15px;outline:none;color:#16122E;background:#fff}
+textarea{min-height:120px;resize:vertical}textarea:focus,input:focus,select:focus{border-color:#5B3CC4;box-shadow:0 0 0 3px rgba(91,60,196,.15)}
 .hint{font-size:12px;color:#6B6590;margin-top:5px;line-height:1.4}
 .rv{padding:12px 0;border-top:1px dashed #E7E3F5}.rv:first-of-type{border-top:0;padding-top:0}
 .rv .h{display:flex;justify-content:space-between;gap:8px;align-items:center}.rv .w2{font-size:11.5px;color:#6B6590;font-weight:700}
@@ -69,6 +69,7 @@ textarea{min-height:120px;resize:vertical}textarea:focus,input:focus{border-colo
   var RS={"Terkirim":["#5B3CC4","#F1EDFF","Terkirim, menunggu dicek"],"Baru":["#E8590C","#FFF4E6","Diterima"],"Dikerjakan":["#16388A","#EAF0FA","Sedang dikerjakan"],"Selesai":["#2E8A1F","#EDF8E6","Selesai direvisi"],"Ditolak":["#868E96","#F1F3F5","Tidak diproses"]};
   function e(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
   function tgl(k){if(!k)return"";var a=String(k).slice(0,10).split("-");if(a.length<3)return e(k);return Number(a[2])+" "+BLN[Number(a[1])-1]+" "+a[0]}
+  function jamOpsi(){var o='<option value="">Pilih jam</option>',h,m;for(h=0;h<24;h++)for(m=0;m<60;m+=30){var v=(h<10?"0":"")+h+":"+(m?"30":"00");o+="<option>"+v+"</option>"}return o+"<option>23:59</option>"}
   function rp(n){return"Rp"+(Number(n)||0).toLocaleString("id-ID")}
   function gagal(m){app.innerHTML='<div class="hd"><div class="br">Portal Klien</div><h1>Portal belum bisa dibuka</h1><div class="jd">'+e(m)+'</div></div><div class="ft">Dikelola melalui Ruang Tumbuh</div>'}
   if(!s||!T){gagal("Link portal tidak lengkap. Minta link terbaru kepada pengelola.");return}
@@ -86,7 +87,7 @@ textarea{min-height:120px;resize:vertical}textarea:focus,input:focus{border-colo
     if(k.pesan)h+='<div class="msg">'+e(k.pesan)+'</div>';
     h+='<div class="cd"><div class="st">Ajukan Revisi</div><div class="kuota">'+(k.kuota?("Kuota revisi: "+k.terpakai+" dari "+k.kuota+" terpakai"):"Revisi tanpa batas · "+k.terpakai+" sudah diajukan")+'</div>'+
       (form?'<form id="f"><label>Bagian yang perlu direvisi</label><textarea name="isi" maxlength="2000" required placeholder="Contoh: Bab 2 halaman 15, tambahkan teori motivasi dari jurnal terbaru. Daftar pustaka pakai APA 7."></textarea>'+
-        '<label>Deadline revisi (opsional)</label><input name="dl" type="date"><div class="hint">Tanggal revisi perlu selesai, misalnya sebelum jadwal bimbingan dengan dosen.</div><label>Link file catatan dosen (opsional)</label><input name="link" type="url" placeholder="https://drive.google.com/…"><div class="hint">Unggah foto atau file coretan dosen ke Google Drive, lalu tempel link-nya di sini.</div>'+
+        '<div style="display:grid;grid-template-columns:1.25fr 1fr;gap:10px"><div><label>Deadline revisi</label><input name="dl" type="date"></div><div><label>Jam</label><select name="jam">'+jamOpsi()+'</select></div></div><div class="hint">Tanggal dan jam revisi perlu selesai, misalnya sebelum jadwal bimbingan dengan dosen. Boleh dikosongkan.</div><label>Link file catatan dosen (opsional)</label><input name="link" type="url" placeholder="https://drive.google.com/…"><div class="hint">Unggah foto atau file coretan dosen ke Google Drive, lalu tempel link-nya di sini.</div>'+
         '<input class="hp" name="situs" tabindex="-1" autocomplete="off"><div class="er" id="er"></div><button class="btn" id="b" style="margin-top:14px">Kirim Revisi</button><button type="button" class="btn gh" id="bt" style="margin-top:8px">Batal</button></form>'
       :'<button class="btn" id="ar" '+(habis||k.status==="Batal"?"disabled":"")+'>'+(habis?"Kuota revisi habis":"Ajukan Revisi Sekarang")+'</button>'+(habis?'<div class="hint" style="text-align:center;margin-top:8px">Hubungi pengelola untuk menambah paket revisi.</div>':''))+
       '<div id="okm"></div></div>';
@@ -104,7 +105,7 @@ textarea{min-height:120px;resize:vertical}textarea:focus,input:focus{border-colo
     var ar=document.getElementById("ar");if(ar)ar.onclick=function(){form=true;tampil();var f=document.getElementById("f");f.isi.focus()};
     var f=document.getElementById("f");if(f){document.getElementById("bt").onclick=function(){form=false;tampil()};
       f.onsubmit=function(ev){ev.preventDefault();var b=document.getElementById("b"),er=document.getElementById("er");er.style.display="none";b.disabled=true;b.textContent="Mengirim…";
-        fetch(API,{method:"POST",body:JSON.stringify({aksi:"revisi",t:T,isi:f.isi.value,link:f.link.value,dl:f.dl.value,situs:f.situs.value})}).then(function(r){return r.json()}).then(function(r){
+        fetch(API,{method:"POST",body:JSON.stringify({aksi:"revisi",t:T,isi:f.isi.value+(f.jam.value?"\nJam deadline: "+f.jam.value:""),link:f.link.value,dl:f.dl.value,situs:f.situs.value})}).then(function(r){return r.json()}).then(function(r){
           if(!r||!r.ok){er.textContent=(r&&r.pesan)||"Gagal mengirim";er.style.display="block";b.disabled=false;b.textContent="Kirim Revisi";return}
           form=false;muat(true);setTimeout(function(){var o=document.getElementById("okm");if(o)o.innerHTML='<div class="ok">Revisi terkirim dan langsung masuk ke daftar pengerjaan. Terima kasih.</div>'},900)
         }).catch(function(){er.textContent="Gagal mengirim. Periksa koneksi lalu coba lagi.";er.style.display="block";b.disabled=false;b.textContent="Kirim Revisi"})}}
