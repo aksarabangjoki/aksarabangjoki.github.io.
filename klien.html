@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Portal Klien · Aksara Bangjoki</title>
 <meta property="og:title" content="Portal Klien · Aksara Bangjoki">
-<meta property="og:description" content="Pantau progres pengerjaan, buka dokumen dan ajukan revisi skripsi.">
+<meta property="og:description" content="Pantau progres pengerjaan, pembayaran, ajukan revisi dan bimbingan.">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:"Plus Jakarta Sans",system-ui,Arial,sans-serif}
@@ -51,6 +51,7 @@ textarea{min-height:120px;resize:vertical}textarea:focus,input:focus,select:focu
 .ft{text-align:center;font-size:11.5px;color:#6B6590;margin-top:18px}
 .ld{height:14px;border-radius:7px;background:linear-gradient(90deg,#EEEAF9,#E2DCF7,#EEEAF9);background-size:200% 100%;animation:sh 1.2s infinite;margin:10px 0}
 @keyframes sh{to{background-position:-200% 0}}.hp{position:absolute;left:-9999px}
+.md{display:grid;grid-template-columns:1fr 1fr;gap:10px}.md button{border:2px solid #DCD5F2;background:#fff;border-radius:16px;padding:12px;text-align:left;cursor:pointer;color:#16122E}.md button b{display:block;font-size:15px}.md button small{display:block;font-size:11.5px;color:#6B6590;font-weight:600;margin-top:2px}.md button.on{border-color:#0B7A5C;background:#E6FCF5}
 .rf{border:0;background:none;color:#5B3CC4;font-weight:800;font-size:12px;cursor:pointer;letter-spacing:0;text-transform:none}
 </style>
 </head>
@@ -73,7 +74,8 @@ textarea{min-height:120px;resize:vertical}textarea:focus,input:focus,select:focu
   function rp(n){return"Rp"+(Number(n)||0).toLocaleString("id-ID")}
   function gagal(m){app.innerHTML='<div class="hd"><div class="br">Portal Klien</div><h1>Portal belum bisa dibuka</h1><div class="jd">'+e(m)+'</div></div><div class="ft">Dikelola melalui Ruang Tumbuh</div>'}
   if(!s||!T){gagal("Link portal tidak lengkap. Minta link terbaru kepada pengelola.");return}
-  var D=null,form=false;
+  var D=null,form=false,formB=false,bMode="Online";
+  var BS={"Terkirim":["#5B3CC4","#F1EDFF","Menunggu persetujuan"],"Diajukan":["#E8590C","#FFF4E6","Menunggu persetujuan"],"Disetujui":["#16388A","#EAF0FA","Disetujui"],"Selesai":["#2E8A1F","#EDF8E6","Selesai"],"Ditolak":["#868E96","#F1F3F5","Belum bisa dipenuhi"]};
   function muat(diam){if(!diam&&!D)app.firstElementChild&&0;
     fetch(API+"?aksi=klien&t="+encodeURIComponent(T)).then(function(r){return r.text()}).then(function(t){var r;try{r=JSON.parse(t)}catch(x){throw"akses"}
       if(!r.ok){if(r.pesan==="Kunci salah")throw"versi";gagal(r.pesan||"Data tidak ditemukan.");return}D=r;tampil()}).catch(function(x){gagal(x==="versi"?"Server portal belum diperbarui. Pengelola perlu menerapkan versi baru Apps Script (kode: V2).":x==="akses"?"Server portal belum dibuka untuk umum (kode: A1).":"Tidak dapat terhubung ke server. Periksa koneksi internet lalu muat ulang halaman (kode: K1).")})}
@@ -91,10 +93,17 @@ textarea{min-height:120px;resize:vertical}textarea:focus,input:focus,select:focu
         '<input class="hp" name="situs" tabindex="-1" autocomplete="off"><div class="er" id="er"></div><button class="btn" id="b" style="margin-top:14px">Kirim Revisi</button><button type="button" class="btn gh" id="bt" style="margin-top:8px">Batal</button></form>'
       :'<button class="btn" id="ar" '+(habis||k.status==="Batal"?"disabled":"")+'>'+(habis?"Kuota revisi habis":"Ajukan Revisi Sekarang")+'</button>'+(habis?'<div class="hint" style="text-align:center;margin-top:8px">Hubungi pengelola untuk menambah paket revisi.</div>':''))+
       '<div id="okm"></div></div>';
+    h+='<div class="cd"><div class="st">Bimbingan dengan Mentor</div>'+
+      (formB?'<form id="fb"><label>Cara bimbingan</label><div class="md">'+["Online","Offline"].map(function(m){return'<button type="button" data-md="'+m+'" class="'+(bMode===m?"on":"")+'"><b>'+m+'</b><small>'+(m==="Online"?"Lewat video call / chat":"Tatap muka langsung")+'</small></button>'}).join("")+'</div>'+
+        '<div style="display:grid;grid-template-columns:1.25fr 1fr;gap:10px"><div><label>Tanggal</label><input name="tgl" type="date" required></div><div><label>Jam</label><select name="jam" required>'+jamOpsi()+'</select></div></div>'+
+        '<label>Topik yang ingin dibahas</label><input name="topik" maxlength="200" required placeholder="Contoh: Pembahasan Bab 3 dan instrumen penelitian">'+
+        '<label>Catatan (opsional)</label><textarea name="catatan" maxlength="600" style="min-height:80px" placeholder="Contoh: sebelum jadwal bimbingan dosen hari Jumat"></textarea>'+
+        '<input class="hp" name="situs" tabindex="-1" autocomplete="off"><div class="er" id="erb"></div><button class="btn" id="bb" style="margin-top:14px;background:#0B7A5C">Kirim Ajuan Bimbingan</button><button type="button" class="btn gh" id="btb" style="margin-top:8px">Batal</button></form>'
+      :'<div class="hint" style="margin:0 0 12px;font-size:13px">Ajukan jadwal bimbingan online atau offline. Mentor akan mengonfirmasi lewat WhatsApp.</div><button class="btn" id="ab" style="background:#0B7A5C" '+(k.status==="Batal"?"disabled":"")+'>Ajukan Bimbingan</button>')+'<div id="okb"></div>'+
+      (k.sesi.length?'<div class="st" style="margin-top:16px">Jadwal & Riwayat Bimbingan</div>'+k.sesi.map(function(o){var c=BS[o.status]||BS.Selesai;return'<div class="th"><span class="no" style="color:'+c[0]+';background:'+c[1]+'">'+(o.status==="Selesai"?"✓":"•")+'</span><div class="t">'+e(o.topik||"Bimbingan")+'<div class="d">'+tgl(o.tgl)+(o.jam?" pukul "+e(o.jam):"")+(o.mode?" · "+e(o.mode):"")+'</div>'+(o.tempat?(/^https?:\/\//.test(o.tempat)?'<a href="'+e(o.tempat)+'" target="_blank" rel="noopener" style="font-size:12.5px;font-weight:700;color:#5B3CC4">Buka link bimbingan</a>':'<div class="d">Lokasi: '+e(o.tempat)+'</div>'):'')+'</div><span class="tg" style="color:'+c[0]+';background:'+c[1]+'">'+c[2]+'</span></div>'}).join(""):'')+'</div>';
     h+='<div class="cd"><div class="st">Riwayat Revisi</div>'+(k.revisi.length?k.revisi.map(function(r){var c=RS[r.status]||RS.Baru;return'<div class="rv"><div class="h"><span class="w2">'+e(r.waktu)+'</span><span class="tg" style="color:'+c[0]+';background:'+c[1]+'">'+c[2]+'</span></div><p>'+e(r.isi)+'</p>'+(r.dl||r.selesai?'<div class="w2" style="margin-top:6px">'+(r.dl?'Deadline '+tgl(r.dl):'')+(r.dl&&r.selesai?' · ':'')+(r.selesai?'Selesai '+tgl(r.selesai):'')+'</div>':'')+(r.hasil?'<a href="'+e(r.hasil)+'" target="_blank" rel="noopener" style="display:inline-block;margin:6px 12px 0 0">Buka hasil revisi</a>':'')+(r.link?'<a href="'+e(r.link)+'" target="_blank" rel="noopener">Buka file lampiran</a>':'')+(r.balas?'<div class="bl"><b>Balasan:</b> '+e(r.balas)+'</div>':'')+'</div>'}).join(""):'<div class="em">Belum ada revisi yang diajukan.</div>')+'</div>';
     h+='<div class="cd"><div class="st">Tahapan Pengerjaan <button class="rf" id="rf">Muat ulang</button></div>'+(k.tahap.length?k.tahap.map(function(t,i){var c=ST[t.s]||ST[0];return'<div class="th"><span class="no" style="color:'+c[1]+';background:'+c[2]+'">'+(t.s===3?"✓":i+1)+'</span><div class="t">'+e(t.k)+(t.tgl?'<div class="d">'+(t.s===3?"Selesai ":"Diperbarui ")+tgl(t.tgl)+'</div>':'')+'</div><span class="tg" style="color:'+c[1]+';background:'+c[2]+'">'+c[0]+'</span></div>'}).join(""):'<div class="em">Tahapan belum diatur.</div>')+'</div>';
     h+='<div class="cd"><div class="st">Lokasi Dokumen</div>'+(k.docs.length?k.docs.map(function(d){return'<a class="doc" href="'+e(d.url)+'" target="_blank" rel="noopener"><span class="i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></span><div><b>'+e(d.nama)+'</b><span>Ketuk untuk membuka</span></div></a>'}).join(""):'<div class="em">Link dokumen belum ditambahkan.</div>')+'</div>';
-    if(k.sesi.length)h+='<div class="cd"><div class="st">Sesi Bimbingan Terakhir</div>'+k.sesi.map(function(o){return'<div class="th"><span class="no" style="color:#5B3CC4;background:#F1EDFF">•</span><div class="t">'+e(o.topik||"Bimbingan")+'<div class="d">'+tgl(o.tgl)+(o.mode?" · "+e(o.mode):"")+'</div></div></div>'}).join("")+'</div>';
     if(k.biaya){var sisa=Math.max(0,k.biaya-k.dibayar);h+='<div class="cd"><div class="st">Pembayaran</div><div class="pay"><div><small>Sudah dibayar</small><b style="color:#2E8A1F">'+rp(k.dibayar)+'</b></div><div style="text-align:right"><small>'+(sisa?"Sisa":"Status")+'</small><b style="color:'+(sisa?"#C25E00":"#2E8A1F")+'">'+(sisa?rp(sisa):"Lunas")+'</b></div></div><div class="bar"><i style="width:'+Math.min(100,k.dibayar/k.biaya*100)+'%"></i></div>'+
       '<div class="th" style="margin-top:10px"><div class="t">Total biaya</div><b>'+rp(k.biaya)+'</b></div>'+
       ((k.bayar||[]).length?'<div class="st" style="margin-top:14px;font-size:13px">Rincian pembayaran</div>'+k.bayar.map(function(b){return'<div class="th"><span class="no" style="color:#2E8A1F;background:#EDF8E6">✓</span><div class="t">'+e(b.ket||"Pembayaran")+'<div class="d">'+tgl(b.tgl)+'</div></div><b style="color:#2E8A1F">'+rp(b.jml)+'</b></div>'}).join(""):'<div class="em">Belum ada pembayaran yang tercatat.</div>')+'</div>'}
@@ -103,6 +112,15 @@ textarea{min-height:120px;resize:vertical}textarea:focus,input:focus,select:focu
     app.innerHTML=h;
     var rf=document.getElementById("rf");if(rf)rf.onclick=function(){rf.textContent="Memuat…";muat(true)};
     var ar=document.getElementById("ar");if(ar)ar.onclick=function(){form=true;tampil();var f=document.getElementById("f");f.isi.focus()};
+    var ab=document.getElementById("ab");if(ab)ab.onclick=function(){formB=true;tampil();var fb=document.getElementById("fb");fb.scrollIntoView({behavior:"smooth",block:"center"})};
+    var fb=document.getElementById("fb");if(fb){var tt=new Date();tt.setMinutes(tt.getMinutes()-tt.getTimezoneOffset());fb.tgl.min=tt.toISOString().slice(0,10);
+      document.getElementById("btb").onclick=function(){formB=false;tampil()};
+      [].forEach.call(fb.querySelectorAll("[data-md]"),function(m){m.onclick=function(){bMode=m.dataset.md;[].forEach.call(fb.querySelectorAll("[data-md]"),function(z){z.className=z===m?"on":""})}});
+      fb.onsubmit=function(ev){ev.preventDefault();var b=document.getElementById("bb"),er=document.getElementById("erb");er.style.display="none";b.disabled=true;b.textContent="Mengirim…";
+        fetch(API,{method:"POST",body:JSON.stringify({aksi:"bimbingan",t:T,mode:bMode,tgl:fb.tgl.value,jam:fb.jam.value,topik:fb.topik.value,catatan:fb.catatan.value,situs:fb.situs.value})}).then(function(r){return r.json()}).then(function(r){
+          if(!r||!r.ok){er.textContent=(r&&r.pesan==="Kunci salah"?"Server belum diperbarui. Hubungi pengelola (kode: V3).":(r&&r.pesan)||"Gagal mengirim");er.style.display="block";b.disabled=false;b.textContent="Kirim Ajuan Bimbingan";return}
+          formB=false;muat(true);setTimeout(function(){var o=document.getElementById("okb");if(o)o.innerHTML='<div class="ok">Ajuan bimbingan terkirim. Mentor akan mengonfirmasi jadwalnya lewat WhatsApp.</div>'},900)
+        }).catch(function(){er.textContent="Gagal mengirim. Periksa koneksi lalu coba lagi.";er.style.display="block";b.disabled=false;b.textContent="Kirim Ajuan Bimbingan"})}}
     var f=document.getElementById("f");if(f){document.getElementById("bt").onclick=function(){form=false;tampil()};
       f.onsubmit=function(ev){ev.preventDefault();var b=document.getElementById("b"),er=document.getElementById("er");er.style.display="none";b.disabled=true;b.textContent="Mengirim…";
         fetch(API,{method:"POST",body:JSON.stringify({aksi:"revisi",t:T,isi:f.isi.value+(f.jam.value?"\nJam deadline: "+f.jam.value:""),link:f.link.value,dl:f.dl.value,situs:f.situs.value})}).then(function(r){return r.json()}).then(function(r){
