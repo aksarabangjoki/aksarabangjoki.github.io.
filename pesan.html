@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<script>/* link lama berformat ?t= diarahkan ke portal */(function(){try{var q=new URLSearchParams(location.search);if(q.get("t"))location.replace("klien.html"+location.search+location.hash)}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0B1E4A">
@@ -124,7 +125,9 @@ body.rv .chips button.on:not(.warn){background:#4530B0;border-color:#4530B0}
   function sec(n,j,k,h){return'<div class="cd" data-s="'+n+'"><div class="st"><span class="no">'+n+'</span><div><b>'+j+'</b><small>'+k+'</small></div></div>'+h+'</div>'}
   var DATA='<label>Nama Lengkap <i>*</i></label><input name="nama" required maxlength="80" placeholder="Nama Anda"><label>Nomor HP / WhatsApp <i>*</i></label><input name="hp" type="tel" inputmode="tel" required maxlength="16" placeholder="08xxxxxxxxxx">';
   function jamOpsi(){var o='<option value="">Pilih jam</option>',h,m;for(h=0;h<24;h++)for(m=0;m<60;m+=30){var v=(h<10?"0":"")+h+":"+(m?"30":"00");o+="<option>"+v+"</option>"}return o+"<option>23:59</option>"}
-  function opsi(){return'<option value="">Pilih jenis tugas</option>'+C.jenis.map(function(j){return"<option>"+e(j)+"</option>"}).join("")}
+  function jv(){var a=document.querySelector("[name=jenis]"),b=document.querySelector("[name=jenisL]");if(!a)return"";return /lainnya/i.test(a.value)?(b?b.value.trim():""):a.value}
+  function jvTog(){var a=document.querySelector("[name=jenis]"),b=document.querySelector("[name=jenisL]");if(!a||!b)return;var on=/lainnya/i.test(a.value);b.style.display=on?"block":"none";b.required=on;if(on&&!b.value)setTimeout(function(){b.focus()},30)}
+  function opsi(){return'<option value="">Pilih jenis tugas</option>'+C.jenis.filter(function(j){return!/lainnya/i.test(j)}).map(function(j){return"<option>"+e(j)+"</option>"}).join("")+'<option value="Lainnya">Lainnya (tulis sendiri)</option>'}
 
   function pilihan(){var pl=G("pl");
     pl.innerHTML=(mode?'':'<div class="tanya">Apa yang ingin diajukan?</div>')+'<div class="pil'+(mode?' mini':'')+'">'+[["order","Order Baru","Pesan pengerjaan tugas baru"],["revisi","Revisi","Perbaikan tugas yang sudah kami kerjakan"]].map(function(x){return'<button type="button" data-m="'+x[0]+'" class="'+(mode===x[0]?"on":"")+'"><span class="pi">'+IC[x[0]]+'</span><span><b>'+x[1]+'</b><small>'+x[2]+'</small></span></button>'}).join("")+'</div>';
@@ -138,14 +141,14 @@ body.rv .chips button.on:not(.warn){background:#4530B0;border-color:#4530B0}
     var KIRIM=rv?"Kirim Permintaan Revisi":"Kirim Pesanan";
     isi.innerHTML='<form id="f" autocomplete="on" novalidate>'+(rv?
       sec(1,"Data Pemesan","Samakan dengan data saat memesan",DATA)+
-      sec(2,"Revisi","Tugas mana dan apa yang perlu diperbaiki",'<label>Jenis Tugas yang Direvisi <i>*</i></label><select name="jenis" required>'+opsi()+'</select>'+
+      sec(2,"Revisi","Tugas mana dan apa yang perlu diperbaiki",'<label>Jenis Tugas yang Direvisi <i>*</i></label><select name="jenis" required>'+opsi()+'</select><input name="jenisL" maxlength="60" autocomplete="off" placeholder="Tulis jenis tugasnya, misalnya Jurnal, Esai, Video" style="display:none;margin-top:8px">'+
        '<label>Catatan Revisi <i>*</i></label><textarea name="catatan" required maxlength="800" placeholder="Tuliskan bagian yang direvisi dan apa yang perlu diperbaiki."></textarea>'+
        '<div class="g2"><div><label>Tenggat Revisi <i>*</i></label><input name="tenggat" type="date" required></div><div><label>Jam <i>*</i></label><select name="jam" required>'+jamOpsi()+'</select></div></div>'+
        '<label>Link File <em>(opsional)</em></label><input name="link" type="url" inputmode="url" maxlength="200" placeholder="https://drive.google.com/…"><div class="hint">File juga bisa dikirim lewat WhatsApp setelah formulir terkirim. <a href="'+LINK_SK+'" target="_blank" rel="noopener" style="color:#4530B0;font-weight:700">Ketentuan revisi</a></div>'+
        '<input class="hp" name="situs" tabindex="-1" autocomplete="off"><div class="er" id="er"></div><button class="kirim" id="b">'+KIRIM+'</button>')
      :
       sec(1,"Data Pemesan","Untuk kami hubungi lewat WhatsApp",DATA)+
-      sec(2,"Detail Tugas","Jenis tugas dan kapan harus selesai",'<label>Jenis Tugas <i>*</i></label><select name="jenis" required>'+opsi()+'</select>'+
+      sec(2,"Detail Tugas","Jenis tugas dan kapan harus selesai",'<label>Jenis Tugas <i>*</i></label><select name="jenis" required>'+opsi()+'</select><input name="jenisL" maxlength="60" autocomplete="off" placeholder="Tulis jenis tugasnya, misalnya Jurnal, Esai, Video" style="display:none;margin-top:8px">'+
        '<div class="g2"><div><label>Tenggat Waktu <i>*</i></label><input name="tenggat" type="date" required></div><div><label>Jam <i>*</i></label><select name="jam" required>'+jamOpsi()+'</select></div></div><div class="hint">Tanggal dan jam tugas harus selesai</div>'+
        '<label>Detail Tugas <em>(opsional)</em></label><textarea name="detail" maxlength="950" placeholder="Judul, jumlah halaman, ketentuan khusus, dll."></textarea>'+
        '<input class="hp" name="situs" tabindex="-1" autocomplete="off"><div class="er" id="er"></div><button class="kirim" id="b">'+KIRIM+'</button>'))+'</form>';
@@ -153,15 +156,15 @@ body.rv .chips button.on:not(.warn){background:#4530B0;border-color:#4530B0}
     sp.innerHTML="";for(i=0;i<N;i++)sp.appendChild(document.createElement("span"));
     f.nama.value=ambil("rv_nama");f.hp.value=ambil("rv_hp");
     function dataOk(){return f.nama.value.trim().length>1&&f.hp.value.replace(/\D/g,"").length>=9}
-    function lengkap(n){return n===1?dataOk():!!(f.jenis.value&&f.tenggat.value&&f.jam.value&&(!rv||f.catatan.value.trim().length>=5))}
+    function lengkap(n){return n===1?dataOk():!!(jv()&&f.tenggat.value&&f.jam.value&&(!rv||f.catatan.value.trim().length>=5))}
     function maju(){var n=0,i,ok;for(i=1;i<=N;i++){ok=lengkap(i);if(ok)n++;f.querySelector('[data-s="'+i+'"]').classList.toggle("done",!!ok);sp.children[i-1].className=ok?"on":""}
       G("sx").textContent=n===N?"Siap dikirim":n+" dari "+N+" bagian terisi"}
-    f.addEventListener("input",function(ev){if(ev.target.classList)ev.target.classList.remove("bad");G("er").style.display="none";maju()});f.addEventListener("change",function(ev){if(ev.target.classList)ev.target.classList.remove("bad");maju()});maju();
+    f.addEventListener("input",function(ev){if(ev.target.classList)ev.target.classList.remove("bad");G("er").style.display="none";maju()});f.addEventListener("change",function(ev){if(ev.target.name==="jenis")jvTog();if(ev.target.classList)ev.target.classList.remove("bad");maju()});maju();
     function salah(el,m){var er=G("er");er.textContent=m;er.style.display="block";if(el){el.classList.add("bad");el.scrollIntoView({behavior:"smooth",block:"center"});if(el.focus&&el.tagName!=="DIV")try{el.focus({preventScroll:true})}catch(x){}}return false}
     function periksa(){
       if(f.nama.value.trim().length<2)return salah(f.nama,"Nama lengkap wajib diisi.");
       if(f.hp.value.replace(/\D/g,"").length<9)return salah(f.hp,"Nomor HP belum benar.");
-      if(!f.jenis.value)return salah(f.jenis,rv?"Pilih jenis tugas yang direvisi.":"Pilih jenis tugas.");
+      if(!jv())return /lainnya/i.test(f.jenis.value)?salah(f.jenisL,"Tulis jenis tugas lainnya."):salah(f.jenis,rv?"Pilih jenis tugas yang direvisi.":"Pilih jenis tugas.");
       if(rv){
        if(f.catatan.value.trim().length<5)return salah(f.catatan,"Catatan revisi wajib diisi.");
        if(f.link.value.trim()&&!/^https?:\/\/\S+\.\S+/.test(f.link.value.trim()))return salah(f.link,"Link harus diawali https://")}
@@ -172,11 +175,11 @@ body.rv .chips button.on:not(.warn){background:#4530B0;border-color:#4530B0}
     f.onsubmit=function(ev){ev.preventDefault();var b=G("b"),er=G("er");er.style.display="none";if(!periksa())return;
       var d,R,msg,jdl,sub,tb,nama=f.nama.value.trim(),jam=f.jam.value;
       if(rv){var lk=f.link.value.trim(),ct=f.catatan.value.trim();
-        d={aksi:"pesan",nama:nama,hp:f.hp.value.trim(),jenis:("Revisi - "+f.jenis.value).slice(0,80),tenggat:f.tenggat.value,detail:("REVISI\nJam tenggat: "+jam+"\nCatatan: "+ct+(lk?"\nFile: "+lk:"")).slice(0,1000),situs:f.situs.value};
-        R=[["Nama",nama],["Tugas",f.jenis.value],["Catatan",ct.length>140?ct.slice(0,140)+"…":ct],["Tenggat",tgl(d.tenggat)+" pukul "+jam]];
-        msg="Halo Admin, saya "+nama+" baru saja mengajukan *revisi* "+f.jenis.value+" dengan tenggat "+tgl(d.tenggat)+" pukul "+jam+".{kode}\n\nFile atau catatan revisi saya kirim di chat ini.";
+        d={aksi:"pesan",nama:nama,hp:f.hp.value.trim(),jenis:("Revisi - "+jv()).slice(0,80),tenggat:f.tenggat.value,detail:("REVISI\nJam tenggat: "+jam+"\nCatatan: "+ct+(lk?"\nFile: "+lk:"")).slice(0,1000),situs:f.situs.value};
+        R=[["Nama",nama],["Tugas",jv()],["Catatan",ct.length>140?ct.slice(0,140)+"…":ct],["Tenggat",tgl(d.tenggat)+" pukul "+jam]];
+        msg="Halo Admin, saya "+nama+" baru saja mengajukan *revisi* "+jv()+" dengan tenggat "+tgl(d.tenggat)+" pukul "+jam+".{kode}\n\nFile atau catatan revisi saya kirim di chat ini.";
         jdl="Permintaan Revisi Terkirim";sub="Revisi sudah masuk antrean dan admin akan menghubungi lewat WhatsApp.";tb="Kirim File Revisi lewat WhatsApp"}
-      else{d={aksi:"pesan",nama:nama,hp:f.hp.value.trim(),jenis:f.jenis.value,tenggat:f.tenggat.value,detail:("Jam tenggat: "+jam+(f.detail.value.trim()?"\n"+f.detail.value.trim():"")).slice(0,1000),situs:f.situs.value};var dt=f.detail.value.trim();
+      else{d={aksi:"pesan",nama:nama,hp:f.hp.value.trim(),jenis:jv(),tenggat:f.tenggat.value,detail:("Jam tenggat: "+jam+(f.detail.value.trim()?"\n"+f.detail.value.trim():"")).slice(0,1000),situs:f.situs.value};var dt=f.detail.value.trim();
         R=[["Nama",nama],["Jenis tugas",d.jenis],["Tenggat",tgl(d.tenggat)+" pukul "+jam]];if(dt)R.push(["Detail",dt.length>140?dt.slice(0,140)+"…":dt]);
         msg="Halo, saya "+nama+" baru saja memesan "+d.jenis+" dengan tenggat "+tgl(d.tenggat)+" pukul "+jam+".{kode}";
         jdl="Pesanan Terkirim";sub="Pesanan "+d.jenis+" sudah kami terima dan admin akan menghubungi lewat WhatsApp.";tb="Konfirmasi lewat WhatsApp"}
