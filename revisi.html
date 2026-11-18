@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1F1454">
+<title>Form Revisi Tugas By Aksara Bangjoki</title>
+<meta property="og:title" content="Form Revisi Tugas By Aksara Bangjoki">
+<meta property="og:description" content="Ajukan revisi tugas: isi nama, nomor HP, jenis tugas, catatan revisi dan tenggat.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Plus Jakarta Sans",system-ui,Arial,sans-serif}
+body{background:#EEF2F9;color:#0F1B33;min-height:100vh;padding:22px 14px 40px}
+.w{max-width:520px;margin:0 auto}
+.hd{background:linear-gradient(135deg,#1F1454,#4530B0 55%,#6B4FE0);color:#fff;border-radius:26px;padding:24px 22px;position:relative;overflow:hidden;box-shadow:0 18px 40px -18px rgba(10,20,45,.6)}
+.hd:after{content:"";position:absolute;right:-50px;top:-60px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.08)}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ic{width:52px;height:52px;border-radius:16px;background:#E5B53F;color:#1A1300;display:grid;place-items:center}
+.bdg{font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;background:rgba(255,255,255,.16);padding:6px 11px;border-radius:99px}
+h1{font-size:23px;font-weight:800}.hd p{font-size:13.5px;opacity:.9;margin-top:6px;line-height:1.5}
+.cd{background:#fff;border-radius:22px;padding:20px;margin-top:14px;box-shadow:0 10px 30px -18px rgba(10,20,45,.4)}
+label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}label:first-child{margin-top:0}label i{color:#E03131;font-style:normal}label em{font-style:normal;font-weight:600;color:#8490A6}
+input,select,textarea{width:100%;padding:13px 14px;border:1.5px solid #D9E2F1;border-radius:13px;font-size:15px;background:#fff;outline:none;color:#0F1B33}
+input:focus,select:focus,textarea:focus{border-color:#4530B0;box-shadow:0 0 0 3px rgba(69,48,176,.15)}
+textarea{min-height:120px;resize:vertical;line-height:1.5}
+.g2{display:grid;grid-template-columns:1.25fr 1fr;gap:10px}.g2 label{margin-top:14px!important}
+.hint{font-size:12px;color:#55617A;margin-top:5px;line-height:1.45}.hint a{color:#4530B0;font-weight:700}
+.kirim{width:100%;margin-top:18px;padding:16px;border:0;border-radius:15px;background:linear-gradient(135deg,#4530B0,#6B4FE0);color:#fff;font-size:15.5px;font-weight:800;cursor:pointer}.kirim:disabled{opacity:.6}
+.er{background:#FFF0F0;color:#C92A2A;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600;margin-top:14px;display:none}
+.ok{text-align:center;padding:10px 0}.ok .ic{margin:0 auto 14px;background:#EBFBEE;color:#2B8A3E;width:76px;height:76px;border-radius:50%}
+.ok h2{font-size:20px}.ok p{color:#55617A;font-size:14px;margin-top:8px;line-height:1.55}
+.wa,.lagi{display:block;width:100%;margin-top:14px;padding:15px;border:0;border-radius:14px;font-size:15px;font-weight:800;text-decoration:none;cursor:pointer}
+.wa{background:#1FAF54;color:#fff}.lagi{background:#EAF0FA;color:#1E3A8A;margin-top:10px}
+.ft{text-align:center;font-size:11.5px;color:#55617A;margin-top:16px}.hp{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="hd">
+    <div class="top"><div class="ic"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"/><path d="M3 21v-5h5"/></svg></div><span class="bdg">Khusus Revisi</span></div>
+    <h1>Form Revisi Tugas</h1><p>Ajukan revisi untuk tugas yang sudah kami kerjakan. Cukup isi data singkat di bawah ini.</p>
+  </div>
+  <div class="cd" id="cd">Memuat formulir…</div>
+  <div class="ft">Dikelola melalui Ruang Tumbuh</div>
+</div>
+<script>
+(function(){
+  /* GANTI bila deployment Apps Script berubah (bagian di antara /s/ dan /exec) */
+  var KODE_DEPLOYMENT="AKfycbwfbfyMvDroaUvOKPiJYqsPiZPJZiQfM6Glkmn7L0SD7XJ1kRHI1EUZzYipc6T2jnj6";
+  var LINK_SK="https://drive.google.com/file/d/13neoInNoLh5e_cUvsdLjkZwPjyib6VMi/view?usp=drive_link";
+  var s=(new URLSearchParams(location.search).get("s")||KODE_DEPLOYMENT).trim();
+  var API=/^https:\/\//.test(s)?s.split("?")[0]:"https://script.google.com/macros/s/"+s+"/exec";
+  var cd=document.getElementById("cd"),G=function(i){return document.getElementById(i)};
+  function e(t){return String(t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+  function jamOpsi(){var o='<option value="">Pilih jam</option>',h,m;for(h=0;h<24;h++)for(m=0;m<60;m+=30){var v=(h<10?"0":"")+h+":"+(m?"30":"00");o+="<option>"+v+"</option>"}return o+"<option>23:59</option>"}
+  function pesan(j,m){cd.innerHTML='<div class="ok"><h2>'+j+'</h2><p>'+m+'</p></div>'}
+  function form(c){
+    if(!c.buka){pesan("Pengajuan revisi sedang ditutup","Silakan hubungi admin kembali nanti.");return}
+    cd.innerHTML='<form id="f" novalidate>'+
+      '<label>Nama Lengkap <i>*</i></label><input name="nama" maxlength="80" placeholder="Nama saat memesan">'+
+      '<label>Nomor HP / WhatsApp <i>*</i></label><input name="hp" type="tel" inputmode="tel" maxlength="16" placeholder="08xxxxxxxxxx">'+
+      '<label>Jenis Tugas yang Direvisi <i>*</i></label><select name="jenis"><option value="">Pilih jenis tugas</option>'+c.jenis.map(function(j){return"<option>"+e(j)+"</option>"}).join("")+'</select>'+
+      '<label>Catatan Revisi <i>*</i></label><textarea name="catatan" maxlength="800" placeholder="Tuliskan bagian yang direvisi dan apa yang perlu diperbaiki."></textarea>'+
+      '<div class="g2"><div><label>Tenggat Revisi <i>*</i></label><input name="tenggat" type="date"></div><div><label>Jam <i>*</i></label><select name="jam">'+jamOpsi()+'</select></div></div>'+
+      '<label>Link File <em>(opsional)</em></label><input name="link" type="url" maxlength="200" placeholder="https://drive.google.com/…">'+
+      '<div class="hint">File juga bisa dikirim lewat WhatsApp setelah formulir terkirim. <a href="'+LINK_SK+'" target="_blank" rel="noopener">Ketentuan revisi</a></div>'+
+      '<input class="hp" name="situs" tabindex="-1" autocomplete="off"><div class="er" id="er"></div><button class="kirim" id="b">Kirim Permintaan Revisi</button></form>';
+    var f=G("f"),t=new Date();t.setMinutes(t.getMinutes()-t.getTimezoneOffset());f.tenggat.min=t.toISOString().slice(0,10);
+    function salah(el,m){var er=G("er");er.textContent=m;er.style.display="block";el.focus();return false}
+    f.onsubmit=function(ev){ev.preventDefault();var b=G("b"),er=G("er"),lk=f.link.value.trim(),ct=f.catatan.value.trim(),nama=f.nama.value.trim();er.style.display="none";
+      if(nama.length<2)return salah(f.nama,"Nama lengkap wajib diisi.");
+      if(f.hp.value.replace(/\D/g,"").length<9)return salah(f.hp,"Nomor HP belum benar.");
+      if(!f.jenis.value)return salah(f.jenis,"Pilih jenis tugas yang direvisi.");
+      if(ct.length<5)return salah(f.catatan,"Catatan revisi wajib diisi.");
+      if(!f.tenggat.value)return salah(f.tenggat,"Tenggat revisi wajib diisi.");
+      if(!f.jam.value)return salah(f.jam,"Pilih jam tenggat.");
+      if(lk&&!/^https?:\/\/\S+\.\S+/.test(lk))return salah(f.link,"Link harus diawali https://");
+      var d={aksi:"pesan",nama:nama,hp:f.hp.value.trim(),jenis:("Revisi - "+f.jenis.value).slice(0,80),tenggat:f.tenggat.value,detail:("REVISI\nJam tenggat: "+f.jam.value+"\nCatatan: "+ct+(lk?"\nFile: "+lk:"")).slice(0,1000),situs:f.situs.value};
+      b.disabled=true;b.textContent="Mengirim…";
+      fetch(API,{method:"POST",body:JSON.stringify(d)}).then(function(r){return r.json()}).then(function(r){
+        if(!r||!r.ok){er.textContent=(r&&r.pesan)||"Gagal mengirim";er.style.display="block";b.disabled=false;b.textContent="Kirim Permintaan Revisi";return}
+        var wa=r.wa?String(r.wa).replace(/\D/g,"").replace(/^0/,"62"):"";
+        var msg="Halo Admin, saya "+nama+" baru saja mengajukan *revisi* "+f.jenis.value+" dengan tenggat "+d.tenggat+" pukul "+f.jam.value+".\n\nFile atau catatan revisi saya kirim di chat ini.";
+        cd.innerHTML='<div class="ok"><div class="ic"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></div><h2>Permintaan Revisi Terkirim</h2><p>Terima kasih, '+e(nama.split(" ")[0])+'. Revisi sudah masuk antrean dan admin akan menghubungi lewat WhatsApp.</p>'+
+          (wa?'<a class="wa" href="https://wa.me/'+wa+'?text='+encodeURIComponent(msg)+'">Kirim File Revisi lewat WhatsApp</a>':'')+'<button class="lagi" id="lg">Ajukan Revisi Lain</button></div>';
+        G("lg").onclick=function(){form(c)};window.scrollTo(0,0);
+      }).catch(function(){er.textContent="Gagal mengirim. Periksa koneksi lalu coba lagi.";er.style.display="block";b.disabled=false;b.textContent="Kirim Permintaan Revisi"})};
+  }
+  fetch(API+"?aksi=jasaInfo").then(function(r){return r.json()}).then(function(r){if(!r.ok||!r.config)throw 0;form(r.config)})
+    .catch(function(){pesan("Formulir belum bisa dibuka","Periksa koneksi internet lalu muat ulang halaman.")});
+})();
+</script>
+</body>
+</html>
