@@ -64,6 +64,17 @@ textarea{min-height:110px;resize:vertical;line-height:1.5}textarea:focus,input:f
 .g2{display:grid;grid-template-columns:1.25fr 1fr;gap:10px}
 .rv{padding:12px 0;border-top:1px dashed var(--line)}.rv:first-of-type{border-top:0}.rv .h{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;color:var(--mute);font-weight:700}
 .rv p{font-size:14px;margin-top:6px;white-space:pre-wrap;line-height:1.5}.rv a{font-size:12.5px;font-weight:700;color:var(--n2)}
+.ty{background:linear-gradient(160deg,#FFF9F2,#FFF4E6);border:1.5px solid #FFD8A8;border-radius:20px;padding:16px;margin-top:12px;box-shadow:0 14px 28px -22px rgba(232,89,12,.6)}
+.ty-h{display:flex;gap:12px;align-items:center}.ty-i{font-size:34px;flex:none;animation:tyGoyang 2.6s ease-in-out infinite}@keyframes tyGoyang{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.06)}}
+.ty-h b{display:block;font-size:16px;color:#8A3B00}.ty-h span{display:block;font-size:12.5px;color:#9C5A1A;line-height:1.5;margin-top:2px}
+.ty-p{font-size:13.5px;line-height:1.55;color:#7A4100;margin-top:10px}.ty-a{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ty-a .btn{margin-top:12px;font-size:13px;padding:12px 8px}
+.btn.wa{background:linear-gradient(135deg,#1FAF55,#25D366)}.btn.gh{background:#fff;color:#8A3B00;border:1.5px solid #FFD8A8}
+.ty-u{display:flex;gap:10px;align-items:center;margin-top:12px;background:#fff;border-radius:14px;padding:10px 12px}.ty-u span{font-size:13px;color:#7A4100;line-height:1.45}
+.ty-sb{color:#F59F00;font-size:22px;letter-spacing:2px;flex:none}.ty-sb.pop{animation:tyPop .7s cubic-bezier(.2,1.6,.4,1)}@keyframes tyPop{0%{transform:scale(.4)}}
+.ty-bt{display:flex;justify-content:center;gap:6px;margin-top:14px}.ty-bt button{border:0;background:none;font-size:40px;line-height:1;color:#E9DCC9;cursor:pointer;transition:transform .2s,color .2s;padding:0 2px}.ty-bt button.on{color:#F59F00;transform:scale(1.12)}.ty-bt button:active{transform:scale(.9)}
+.ty-l{text-align:center;font-weight:800;font-size:13.5px;color:#8A3B00;margin-top:4px;min-height:18px}
+.ty label{display:block;font-size:13px;font-weight:800;margin:12px 0 6px;color:#5C2D00}.ty textarea{width:100%;min-height:70px;border:1.5px solid #FFD8A8;border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;resize:vertical;background:#fff}
+.ty-r{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ty-r button{border:1.5px solid #FFD8A8;background:#fff;border-radius:12px;padding:10px 4px;font:inherit;font-weight:800;font-size:13px;cursor:pointer;color:#7A4100}.ty-r button.on{background:#E8590C;border-color:#E8590C;color:#fff}
 .kc{background:linear-gradient(160deg,#fff,#F6F3FF);border:1.5px solid #E1DAFF;border-radius:20px;padding:18px 16px;margin-bottom:12px;box-shadow:0 14px 28px -20px rgba(27,46,102,.5)}
 .kc.geleng{animation:geleng .45s}@keyframes geleng{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 .kc-g{position:relative;width:64px;height:64px;margin:0 auto 8px;border-radius:20px;background:linear-gradient(135deg,#1B2E66,#5B3FD1);color:#FFD43B;display:grid;place-items:center;box-shadow:0 12px 24px -10px rgba(91,63,209,.7)}
@@ -122,8 +133,34 @@ textarea{min-height:110px;resize:vertical;line-height:1.5}textarea:focus,input:f
       '<div class="sr" style="margin-top:12px"><div><small>Tenggat</small><b>'+(o.tenggat?tgl(o.tenggat):"-")+(o.jam?" · "+e(o.jam):"")+'</b></div><div><small>Masuk</small><b>'+(/^\d{4}-\d{2}-\d{2}/.test(o.waktu||"")?tgl(String(o.waktu).slice(0,10)):"-")+'</b></div></div>'+
       (o.status!=="Batal"?'<div class="prog">'+tahap.map(function(t,i){return'<div class="'+(i<=ix?"on":"")+'"><i>'+(i<ix||o.status==="Selesai"?"✓":i+1)+'</i>'+["Diterima","Dikerjakan","Selesai"][i]+'</div>'}).join("")+'</div>':'')+
       (o.pesan?'<div class="msg">'+e(o.pesan)+'</div>':'')+'</div>';
+    if(o.status==="Selesai"&&o.lunas)h+='<div class="ty" id="ty"></div>';
     h+='<div class="tabs">'+[["file","File",IC.file,o.docs.length],["inv","Invoice",IC.inv,o.lunas?0:(o.sisa?"!":0)],["rev","Revisi",IC.rev,0]].map(function(x){return'<button data-t="'+x[0]+'" class="'+(tab===x[0]?"on":"")+'">'+x[2]+x[1]+(x[3]&&x[3]!=="!"?'<em style="background:#1B2E66">'+x[3]+'</em>':x[3]==="!"?'<em>!</em>':'')+'</button>'}).join("")+'</div><div id="isi"></div><div class="ft">'+e(D.nama||"Aksara by Bang Joki")+' · data diperbarui saat admin menyinkronkan aplikasi</div>';
-    app.innerHTML=h;[].forEach.call(app.querySelectorAll("[data-t]"),function(b){b.onclick=function(){tab=b.dataset.t;[].forEach.call(app.querySelectorAll("[data-t]"),function(z){z.className=z===b?"on":""});isi()}});isi()}
+    app.innerHTML=h;if(G("ty"))ulasan(false);[].forEach.call(app.querySelectorAll("[data-t]"),function(b){b.onclick=function(){tab=b.dataset.t;[].forEach.call(app.querySelectorAll("[data-t]"),function(z){z.className=z===b?"on":""});isi()}});isi()}
+  /* ucapan terima kasih + ulasan kepuasan (pesanan selesai & lunas) */
+  var ulBuka=/[?&]ulasan=1/.test(location.search);
+  function ulasan(form){var o=D.order,u=o.ulasan,box=G("ty"),nm=D.nama||"kami",bt=function(n){return"★★★★★".slice(0,n)+"☆☆☆☆☆".slice(0,5-n)};
+    var pesanUrl=location.href.split("?")[0].replace(/tugas\.html$/,"pesan.html")+(location.search.match(/[?&](s=[^&]+)/)?"?"+location.search.match(/[?&](s=[^&]+)/)[1]:"");
+    var bagi='https://wa.me/?text='+encodeURIComponent("Aku pakai jasa "+nm+" untuk mengerjakan tugas dan hasilnya memuaskan 👍 Kamu juga bisa pesan di sini: "+pesanUrl);
+    if(!form&&!ulBuka){box.innerHTML='<div class="ty-h"><span class="ty-i">💐</span><div><b>Terima kasih, Kak '+e((o.nama||"").split(" ")[0])+'!</b><span>Pesanan sudah selesai dan lunas. Terima kasih sudah mempercayakan tugasnya kepada '+e(nm)+'.</span></div></div>'+
+        (u?'<div class="ty-u"><div class="ty-sb">'+bt(u.bintang)+'</div><span>Ulasanmu sudah kami terima'+(u.rekomendasi==="Ya"?' dan kamu bersedia merekomendasikan kami':'')+'. Terima kasih 🙏</span></div><div class="ty-a"><a class="btn wa" href="'+e(bagi)+'" target="_blank" rel="noopener">💬 Rekomendasikan ke Teman</a><button class="btn gh" id="tyU">Ubah ulasan</button></div>'
+          :'<div class="ty-p">Bila puas dengan hasilnya, rekomendasikan kami ke teman-teman ya 😊 Bantu kami juga dengan memberi penilaian, kritik dan saran.</div><div class="ty-a">'+(o.linkUlasan?'<a class="btn" href="'+e(o.linkUlasan)+'" target="_blank" rel="noopener">⭐ Beri Penilaian</a>':'<button class="btn" id="tyB">⭐ Beri Penilaian, Kritik &amp; Saran</button>')+'<a class="btn wa" href="'+e(bagi)+'" target="_blank" rel="noopener">💬 Rekomendasikan</a></div>');
+      var b=G("tyB")||G("tyU");if(b)b.onclick=function(){ulasan(true)};return}
+    if(o.linkUlasan&&!form){ulBuka=false;ulasan(false);return}
+    ulBuka=false;var v={bintang:u?u.bintang:0,rekomendasi:u?u.rekomendasi:"",kritik:u?u.kritik:"",saran:u?u.saran:""},lbl=["","Kurang puas","Cukup","Puas","Sangat puas","Luar biasa!"];
+    box.innerHTML='<div class="ty-h"><span class="ty-i">⭐</span><div><b>Penilaian Kepuasan</b><span>Seberapa puas Kakak dengan hasil dan pelayanan kami?</span></div></div>'+
+      '<div class="ty-bt">'+[1,2,3,4,5].map(function(n){return'<button data-b="'+n+'" class="'+(n<=v.bintang?"on":"")+'" aria-label="'+n+' bintang">★</button>'}).join("")+'</div><div class="ty-l" id="tyL">'+(v.bintang?lbl[v.bintang]:"Ketuk bintang")+'</div>'+
+      '<label>Apakah Kakak akan merekomendasikan kami ke teman?</label><div class="ty-r">'+["Ya","Mungkin","Tidak"].map(function(r){return'<button data-r="'+r+'" class="'+(v.rekomendasi===r?"on":"")+'">'+({Ya:"👍 Ya",Mungkin:"🤔 Mungkin",Tidak:"👎 Tidak"})[r]+'</button>'}).join("")+'</div>'+
+      '<label>Kritik</label><textarea id="tyK" maxlength="1500" placeholder="Hal yang kurang dari hasil atau pelayanan kami">'+e(v.kritik)+'</textarea><label>Saran</label><textarea id="tyS" maxlength="1500" placeholder="Apa yang bisa kami tingkatkan?">'+e(v.saran)+'</textarea>'+
+      '<div class="er" id="tyE"></div><button class="btn" id="tyKirim">Kirim Ulasan</button>';
+    box.scrollIntoView({behavior:"smooth",block:"start"});
+    [].forEach.call(box.querySelectorAll("[data-b]"),function(b){b.onclick=function(){v.bintang=+b.dataset.b;[].forEach.call(box.querySelectorAll("[data-b]"),function(z){z.className=+z.dataset.b<=v.bintang?"on":""});G("tyL").textContent=lbl[v.bintang]}});
+    [].forEach.call(box.querySelectorAll("[data-r]"),function(b){b.onclick=function(){v.rekomendasi=b.dataset.r;[].forEach.call(box.querySelectorAll("[data-r]"),function(z){z.className=z===b?"on":""})}});
+    G("tyKirim").onclick=function(){var er=G("tyE");er.style.display="none";if(!v.bintang){er.textContent="Pilih jumlah bintang terlebih dahulu.";er.style.display="block";return}
+      var bt2=G("tyKirim");bt2.disabled=true;bt2.textContent="Mengirim…";
+      fetch(API,{method:"POST",body:JSON.stringify({aksi:"ulasanPesanan",t:T,bintang:v.bintang,rekomendasi:v.rekomendasi,kritik:G("tyK").value,saran:G("tyS").value})}).then(function(r){return r.json()}).then(function(r){
+        if(!r||!r.ok)throw new Error(r&&r.pesan==="Kunci salah"?"Server belum diperbarui. Hubungi admin.":(r&&r.pesan)||"Gagal mengirim.");
+        o.ulasan={bintang:v.bintang,rekomendasi:v.rekomendasi,kritik:G("tyK").value,saran:G("tyS").value};ulasan(false);var c=box.querySelector(".ty-sb");if(c)c.classList.add("pop")})
+      .catch(function(x){bt2.disabled=false;bt2.textContent="Kirim Ulasan";er.textContent=x&&x.message&&x.message!=="Failed to fetch"?x.message:"Gagal mengirim. Periksa koneksi lalu coba lagi.";er.style.display="block"})}}
   function lihat(d){var v=document.createElement("div");v.className="lv";v.innerHTML='<div class="lv-h"><b>'+e(d.nama)+'</b><span>Pratinjau · terkunci</span><button aria-label="Tutup">✕</button></div><div class="lv-b"><iframe src="'+e(d.lihat)+'" allow="autoplay" referrerpolicy="no-referrer"></iframe><i class="lv-tt"></i><div class="lv-wm">'+Array(24).join('<span>PRATINJAU · TERKUNCI</span>')+'</div></div>';
     document.body.appendChild(v);document.body.style.overflow="hidden";v.addEventListener("contextmenu",function(ev){ev.preventDefault()});
     v.querySelector("button").onclick=function(){v.remove();document.body.style.overflow=""};requestAnimationFrame(function(){v.classList.add("on")})}
